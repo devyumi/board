@@ -23,7 +23,7 @@ public class BoardService {
                 .content(boardDto.getContent())
                 .views(0)
                 .reports(0)
-                .show("Y")
+                .status(1)
                 .build();
 
         return boardRepository.save(board).getBoardId();
