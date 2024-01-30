@@ -20,7 +20,7 @@ public class BoardDto {
     private String password;
 
     @NotBlank(message = "제목을 입력하세요.")
-    @Size(min = 2, max = 20, message = "제목은 2자 이상, 20자 이하만 가능합니다.")
+    @Size(min = 2, max = 30, message = "제목은 2자 이상, 30자 이하만 가능합니다.")
     private String title;
 
     @NotBlank(message = "내용을 입력하세요.")
