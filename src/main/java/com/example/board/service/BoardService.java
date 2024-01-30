@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -70,5 +69,16 @@ public class BoardService {
     @Transactional
     public Integer updateViews(Long boardId) {
         return boardRepository.updateViewCount(boardId);
+    }
+
+    @Transactional
+    public Integer deletePost(Long boardId, String password) {
+        Board board = boardRepository.findById(boardId).get();
+
+        if (passwordEncoder.matches(password.toString(), board.getPassword())) {
+            return boardRepository.updateStatus(boardId);
+        } else {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
     }
 }

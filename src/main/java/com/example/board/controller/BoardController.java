@@ -14,6 +14,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/board")
@@ -46,5 +47,12 @@ public class BoardController {
     public ResponseEntity<BoardDetailsDto> findPostDetails(@PathVariable(value = "boardId", required = false) Long boardId) {
         return ResponseEntity.ok()
                 .body(boardService.findPostDetails(boardId));
+    }
+
+    @PutMapping("{boardId}")
+    public ResponseEntity<String> deletePost(@PathVariable(value = "boardId") Long boardId, @RequestBody Map<String, String> password) {
+        boardService.deletePost(boardId, password.get("password"));
+        return ResponseEntity.ok()
+                .body("삭제되었습니다.");
     }
 }
