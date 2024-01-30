@@ -14,7 +14,7 @@ public class BoardListsDto {
     private String title;
     private String nickname;
     private Integer views;
-    @JsonFormat(pattern = "yyyy.MM.dd. HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createDate;
 
     @Builder
