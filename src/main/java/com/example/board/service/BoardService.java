@@ -1,6 +1,7 @@
 package com.example.board.service;
 
 import com.example.board.domain.Board;
+import com.example.board.dto.BoardDetailsDto;
 import com.example.board.dto.BoardDto;
 import com.example.board.dto.BoardListsDto;
 import com.example.board.repository.BoardRepository;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -50,5 +52,23 @@ public class BoardService {
             boardListsDtos.add(boardListsDto);
         }
         return boardListsDtos;
+    }
+
+    @Transactional
+    public BoardDetailsDto findPostDetails(Long boardId) {
+        updateViews(boardId);
+        Board board = boardRepository.findById(boardId).get();
+        return BoardDetailsDto.builder()
+                .nickname(board.getNickname())
+                .views(board.getViews())
+                .createDate(board.getCreateDate())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .build();
+    }
+
+    @Transactional
+    public Integer updateViews(Long boardId) {
+        return boardRepository.updateViewCount(boardId);
     }
 }

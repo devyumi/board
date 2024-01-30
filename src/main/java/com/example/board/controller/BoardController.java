@@ -1,5 +1,6 @@
 package com.example.board.controller;
 
+import com.example.board.dto.BoardDetailsDto;
 import com.example.board.dto.BoardDto;
 import com.example.board.dto.BoardListsDto;
 import com.example.board.service.BoardService;
@@ -39,5 +40,11 @@ public class BoardController {
     public ResponseEntity<List<BoardListsDto>> findLists() {
         return ResponseEntity.ok()
                 .body(boardService.findPost());
+    }
+
+    @GetMapping("{boardId}")
+    public ResponseEntity<BoardDetailsDto> findPostDetails(@PathVariable(value = "boardId", required = false) Long boardId) {
+        return ResponseEntity.ok()
+                .body(boardService.findPostDetails(boardId));
     }
 }
