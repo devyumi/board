@@ -1,5 +1,6 @@
 package com.example.board.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ public class BoardListsDto {
     private String title;
     private String nickname;
     private Integer views;
+    @JsonFormat(pattern = "yyyy.MM.dd. HH:mm")
     private LocalDateTime createDate;
 
     @Builder
