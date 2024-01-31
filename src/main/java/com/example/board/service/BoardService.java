@@ -56,20 +56,19 @@ public class BoardService {
 
     @Transactional
     public BoardDetailsDto findPostDetails(Long boardId) {
-        updateViews(boardId);
         Board board = boardRepository.findById(boardId).get();
-        return BoardDetailsDto.builder()
-                .nickname(board.getNickname())
-                .views(board.getViews())
-                .createDate(board.getCreateDate())
-                .title(board.getTitle())
-                .content(board.getContent())
-                .build();
-    }
-
-    @Transactional
-    public Integer updateViews(Long boardId) {
-        return boardRepository.updateViewCount(boardId);
+        if (board.getStatus() == 0) {
+            throw new IllegalStateException("페이지가 존재하지 않습니다.");
+        } else {
+            boardRepository.updateViewCount(boardId);
+            return BoardDetailsDto.builder()
+                    .nickname(board.getNickname())
+                    .views(board.getViews() + 1)
+                    .createDate(board.getCreateDate())
+                    .title(board.getTitle())
+                    .content(board.getContent())
+                    .build();
+        }
     }
 
     @Transactional
@@ -79,7 +78,7 @@ public class BoardService {
         if (passwordEncoder.matches(password.toString(), board.getPassword())) {
             return boardRepository.updateStatus(boardId);
         } else {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
         }
     }
 }
