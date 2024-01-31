@@ -3,6 +3,7 @@ package com.example.board.service;
 import com.example.board.domain.Board;
 import com.example.board.dto.BoardDetailsDto;
 import com.example.board.dto.BoardDto;
+import com.example.board.dto.BoardEditDto;
 import com.example.board.dto.BoardListsDto;
 import com.example.board.repository.BoardRepository;
 import lombok.AllArgsConstructor;
@@ -77,6 +78,17 @@ public class BoardService {
 
         if (passwordEncoder.matches(password.toString(), board.getPassword())) {
             return boardRepository.updateStatus(boardId);
+        } else {
+            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    @Transactional
+    public void updatePost(Long boardId, BoardEditDto boardEditDto) {
+        Board board = boardRepository.findById(boardId).get();
+
+        if (passwordEncoder.matches(boardEditDto.getPassword().toString(), board.getPassword())) {
+            boardRepository.updateBoard(boardId, boardEditDto.getTitle(), boardEditDto.getContent());
         } else {
             throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
         }

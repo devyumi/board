@@ -2,6 +2,7 @@ package com.example.board.controller;
 
 import com.example.board.dto.BoardDetailsDto;
 import com.example.board.dto.BoardDto;
+import com.example.board.dto.BoardEditDto;
 import com.example.board.dto.BoardListsDto;
 import com.example.board.service.BoardService;
 import jakarta.validation.Valid;
@@ -54,5 +55,19 @@ public class BoardController {
         boardService.deletePost(boardId, password.get("password"));
         return ResponseEntity.ok()
                 .body("삭제되었습니다.");
+    }
+
+    @PutMapping("{boardId}/edit")
+    public ResponseEntity<BoardEditDto> editPost(@PathVariable(value = "boardId") Long boardId, @RequestBody @Valid BoardEditDto boardEditDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+            for (FieldError fieldError : fieldErrors) {
+                logger.error("{}: {}", fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            return ResponseEntity.badRequest().body(boardEditDto);
+        }
+        boardService.updatePost(boardId, boardEditDto);
+        return ResponseEntity.ok()
+                .body(boardEditDto);
     }
 }
