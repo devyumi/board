@@ -13,10 +13,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Integer updateViewCount(Long boardId);
 
     @Modifying
-    @Query("update Board b set b.status = 0 where b.boardId = :boardId")
-    Integer updateStatus(Long boardId);
-
-    @Modifying
     @Query("update Board b set b.title = :title, b.content = :content where b.boardId = :boardId")
     void updateBoard(Long boardId, String title, String content);
 }

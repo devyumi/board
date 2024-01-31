@@ -53,12 +53,12 @@ public class BoardController {
                 .body(boardService.findPostDetails(boardId));
     }
 
-    @PutMapping("{boardId}")
+/*    @PutMapping("{boardId}")
     public ResponseEntity<String> deletePost(@PathVariable(value = "boardId") Long boardId, @RequestBody Map<String, String> password) {
         boardService.deletePost(boardId, password.get("password"));
         return ResponseEntity.ok()
                 .body("삭제되었습니다.");
-    }
+    }*/
 
     @PutMapping("{boardId}/edit")
     public ResponseEntity<BoardEditDto> editPost(@PathVariable(value = "boardId") Long boardId, @RequestBody @Valid BoardEditDto boardEditDto, BindingResult bindingResult) {

@@ -31,7 +31,6 @@ public class BoardService {
                 .content(boardDto.getContent())
                 .views(0)
                 .reports(0)
-                .status(1)
                 .build();
 
         return boardRepository.save(board).getBoardId();
@@ -42,38 +41,33 @@ public class BoardService {
         List<BoardListsDto> boardListsDtos = new ArrayList<>();
 
         for (Board board : boards) {
-            if (board.getStatus() == 1) {
-                BoardListsDto boardListsDto = BoardListsDto.builder()
-                        .boardId(board.getBoardId())
-                        .title(board.getTitle())
-                        .nickname(board.getNickname())
-                        .views(board.getViews())
-                        .createDate(board.getCreateDate())
-                        .build();
-                boardListsDtos.add(boardListsDto);
-            }
+            BoardListsDto boardListsDto = BoardListsDto.builder()
+                    .boardId(board.getBoardId())
+                    .title(board.getTitle())
+                    .nickname(board.getNickname())
+                    .views(board.getViews())
+                    .createDate(board.getCreateDate())
+                    .build();
+            boardListsDtos.add(boardListsDto);
         }
         return boardListsDtos;
     }
 
     @Transactional
     public BoardDetailsDto findPostDetails(Long boardId) {
-        Board board = boardRepository.findById(boardId).get();
-        if (board.getStatus() == 0) {
-            throw new IllegalStateException("페이지가 존재하지 않습니다.");
-        } else {
-            boardRepository.updateViewCount(boardId);
-            return BoardDetailsDto.builder()
-                    .nickname(board.getNickname())
-                    .views(board.getViews() + 1)
-                    .createDate(board.getCreateDate())
-                    .title(board.getTitle())
-                    .content(board.getContent())
-                    .build();
-        }
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalStateException("페이지가 존재하지 않습니다."));
+        boardRepository.updateViewCount(boardId);
+        return BoardDetailsDto.builder()
+                .nickname(board.getNickname())
+                .views(board.getViews() + 1)
+                .createDate(board.getCreateDate())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .build();
+
     }
 
-    @Transactional
+/*    @Transactional
     public Integer deletePost(Long boardId, String password) {
         Board board = boardRepository.findById(boardId).get();
 
@@ -82,7 +76,7 @@ public class BoardService {
         } else {
             throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
         }
-    }
+    }*/
 
     @Transactional
     public void updatePost(Long boardId, BoardEditDto boardEditDto) {
