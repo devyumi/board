@@ -80,6 +80,8 @@ public class BoardService {
                     .content(board.getContent())
                     .views(board.getViews())
                     .reports(board.getReports())
+                    .createDate(board.getCreateDate())
+                    .modifiedDate(board.getModifiedDate())
                     .build();
 
             return deletedPostRepository.save(deletedPost).getDeletedPostId();
@@ -96,6 +98,30 @@ public class BoardService {
             boardRepository.updateBoard(boardId, boardEditDto.getTitle(), boardEditDto.getContent());
         } else {
             throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    @Transactional
+    public void reportPost(Long boardId) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalStateException("페이지가 존재하지 않습니다."));
+
+        boardRepository.updateReportCount(boardId);
+        if (board.getReports() == 5) {
+            boardRepository.delete(board);
+
+            DeletedPost deletedPost = DeletedPost.builder()
+                    .boardId(board.getBoardId())
+                    .nickname(board.getNickname())
+                    .password(board.getPassword())
+                    .title(board.getTitle())
+                    .content(board.getContent())
+                    .views(board.getViews())
+                    .reports(board.getReports())
+                    .createDate(board.getCreateDate())
+                    .modifiedDate(board.getModifiedDate())
+                    .build();
+
+            deletedPostRepository.save(deletedPost).getDeletedPostId();
         }
     }
 }

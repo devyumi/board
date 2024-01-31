@@ -7,6 +7,7 @@ import com.example.board.dto.BoardListsDto;
 import com.example.board.service.BoardService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -72,5 +73,12 @@ public class BoardController {
         boardService.updatePost(boardId, boardEditDto);
         return ResponseEntity.ok()
                 .body(boardEditDto);
+    }
+
+    @PostMapping("{boardId}/report")
+    public ResponseEntity<String> reportPost(@PathVariable(value = "boardId") Long boardId) {
+        boardService.reportPost(boardId);
+        return ResponseEntity.ok()
+                .body("게시글이 신고되었습니다.");
     }
 }
