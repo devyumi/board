@@ -106,7 +106,7 @@ public class BoardService {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalStateException("페이지가 존재하지 않습니다."));
 
         boardRepository.updateReportCount(boardId);
-        if (board.getReports() == 5) {
+        if (board.getReports() + 1 == 5) {
             boardRepository.delete(board);
 
             DeletedPost deletedPost = DeletedPost.builder()
@@ -116,7 +116,7 @@ public class BoardService {
                     .title(board.getTitle())
                     .content(board.getContent())
                     .views(board.getViews())
-                    .reports(board.getReports())
+                    .reports(board.getReports() + 1)
                     .createDate(board.getCreateDate())
                     .modifiedDate(board.getModifiedDate())
                     .build();
