@@ -9,6 +9,9 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -39,9 +42,9 @@ public class BoardController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<BoardListsDto>> findLists() {
+    public ResponseEntity<List<BoardListsDto>> findLists(@PageableDefault(sort = "boardId", direction = Sort.Direction.DESC, size = 5) Pageable pageable) {
         return ResponseEntity.ok()
-                .body(boardService.findPost());
+                .body(boardService.findPost(pageable));
     }
 
     @GetMapping("{boardId}")

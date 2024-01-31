@@ -7,7 +7,8 @@ import com.example.board.dto.BoardEditDto;
 import com.example.board.dto.BoardListsDto;
 import com.example.board.repository.BoardRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,8 +37,8 @@ public class BoardService {
         return boardRepository.save(board).getBoardId();
     }
 
-    public List<BoardListsDto> findPost() {
-        List<Board> boards = boardRepository.findAll(Sort.by(Sort.Direction.DESC, "boardId"));
+    public List<BoardListsDto> findPost(Pageable pageable) {
+        Page<Board> boards = boardRepository.findAll(pageable);
         List<BoardListsDto> boardListsDtos = new ArrayList<>();
 
         for (Board board : boards) {
