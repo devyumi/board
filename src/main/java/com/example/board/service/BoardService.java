@@ -1,11 +1,10 @@
 package com.example.board.service;
 
 import com.example.board.domain.Board;
-import com.example.board.dto.BoardDetailsDto;
-import com.example.board.dto.BoardDto;
-import com.example.board.dto.BoardEditDto;
-import com.example.board.dto.BoardListsDto;
+import com.example.board.domain.DeletedPost;
+import com.example.board.dto.*;
 import com.example.board.repository.BoardRepository;
+import com.example.board.repository.DeletedPostRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final DeletedPostRepository deletedPostRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
@@ -64,23 +64,33 @@ public class BoardService {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .build();
-
     }
 
-/*    @Transactional
-    public Integer deletePost(Long boardId, String password) {
-        Board board = boardRepository.findById(boardId).get();
+    @Transactional
+    public Long deletePost(Long boardId, String password) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalStateException("페이지가 존재하지 않습니다."));
 
         if (passwordEncoder.matches(password.toString(), board.getPassword())) {
-            return boardRepository.updateStatus(boardId);
+            boardRepository.delete(board);
+            DeletedPost deletedPost = DeletedPost.builder()
+                    .boardId(board.getBoardId())
+                    .nickname(board.getNickname())
+                    .password(board.getPassword())
+                    .title(board.getTitle())
+                    .content(board.getContent())
+                    .views(board.getViews())
+                    .reports(board.getReports())
+                    .build();
+
+            return deletedPostRepository.save(deletedPost).getDeletedPostId();
         } else {
             throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
         }
-    }*/
+    }
 
     @Transactional
     public void updatePost(Long boardId, BoardEditDto boardEditDto) {
-        Board board = boardRepository.findById(boardId).get();
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalStateException("페이지가 존재하지 않습니다."));
 
         if (passwordEncoder.matches(boardEditDto.getPassword().toString(), board.getPassword())) {
             boardRepository.updateBoard(boardId, boardEditDto.getTitle(), boardEditDto.getContent());
