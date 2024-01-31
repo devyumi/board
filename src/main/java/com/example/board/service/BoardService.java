@@ -40,15 +40,16 @@ public class BoardService {
         List<BoardListsDto> boardListsDtos = new ArrayList<>();
 
         for (Board board : boards) {
-            BoardListsDto boardListsDto = BoardListsDto.builder()
-                    .boardId(board.getBoardId())
-                    .title(board.getTitle())
-                    .nickname(board.getNickname())
-                    .views(board.getViews())
-                    .createDate(board.getCreateDate())
-                    .build();
-
-            boardListsDtos.add(boardListsDto);
+            if (board.getStatus() == 1) {
+                BoardListsDto boardListsDto = BoardListsDto.builder()
+                        .boardId(board.getBoardId())
+                        .title(board.getTitle())
+                        .nickname(board.getNickname())
+                        .views(board.getViews())
+                        .createDate(board.getCreateDate())
+                        .build();
+                boardListsDtos.add(boardListsDto);
+            }
         }
         return boardListsDtos;
     }
