@@ -7,7 +7,6 @@ import com.example.board.dto.BoardListsDto;
 import com.example.board.service.BoardService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -43,9 +42,17 @@ public class BoardController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<BoardListsDto>> findLists(@PageableDefault(sort = "boardId", direction = Sort.Direction.DESC, size = 5) Pageable pageable) {
-        return ResponseEntity.ok()
-                .body(boardService.findPost(pageable));
+    public ResponseEntity<List<BoardListsDto>> findLists(@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+                                                         @PageableDefault(size = 5, sort = "boardId", direction = Sort.Direction.DESC) Pageable pageable) {
+        if (keyword.length() == 0) {
+            return ResponseEntity.ok()
+                    .body(boardService.findPost(pageable));
+        } else if (keyword.length() == 1) {
+            throw new IllegalStateException("검색 키워드를 두 글자 이상 입력하세요.");
+        } else {
+            return ResponseEntity.ok()
+                    .body(boardService.searchPosts(keyword, pageable));
+        }
     }
 
     @GetMapping("{boardId}")

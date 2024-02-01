@@ -124,4 +124,21 @@ public class BoardService {
             deletedPostRepository.save(deletedPost).getDeletedPostId();
         }
     }
+
+    public List<BoardListsDto> searchPosts(String keyword, Pageable pageable) {
+        List<Board> boards = boardRepository.findByTitleContaining(keyword, pageable);
+        List<BoardListsDto> boardListsDtos = new ArrayList<>();
+
+        for (Board board : boards) {
+            BoardListsDto boardListsDto = BoardListsDto.builder()
+                    .boardId(board.getBoardId())
+                    .title(board.getTitle())
+                    .nickname(board.getNickname())
+                    .views(board.getViews())
+                    .createDate(board.getCreateDate())
+                    .build();
+            boardListsDtos.add(boardListsDto);
+        }
+        return boardListsDtos;
+    }
 }
