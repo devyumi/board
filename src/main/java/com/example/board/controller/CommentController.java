@@ -1,6 +1,7 @@
 package com.example.board.controller;
 
 import com.example.board.dto.CommentDto;
+import com.example.board.dto.CommentEditDto;
 import com.example.board.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -30,8 +31,28 @@ public class CommentController {
             }
             return ResponseEntity.badRequest().body(commentDto);
         }
-        commentService.saveComment(commentDto, boardId);
+        commentService.saveComment(boardId, commentDto);
         return ResponseEntity.ok()
                 .body(commentDto);
+    }
+
+    @PutMapping("{commentId}/edit")
+    public ResponseEntity<CommentEditDto> editComment(@PathVariable(value = "boardId") Long boardId,
+                                                      @PathVariable(value = "commentId") Long commentId,
+                                                      @RequestBody @Valid CommentEditDto commentEditDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+            for (FieldError fieldError : fieldErrors) {
+                logger.error("{}: {}", fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            return ResponseEntity.badRequest()
+                    .body(CommentEditDto.builder()
+                            .password(null)
+                            .content(null)
+                            .build());
+        }
+        commentService.updateComment(boardId, commentId, commentEditDto);
+        return ResponseEntity.ok()
+                .body(commentEditDto);
     }
 }
