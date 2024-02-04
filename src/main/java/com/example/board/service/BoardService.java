@@ -1,6 +1,7 @@
 package com.example.board.service;
 
 import com.example.board.domain.Board;
+import com.example.board.domain.Comment;
 import com.example.board.domain.DeletedPost;
 import com.example.board.dto.*;
 import com.example.board.repository.BoardRepository;
@@ -57,15 +58,29 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardDetailsDto findPostDetails(Long boardId) {
+    public BoardDetailsDto findPostDetails(Long boardId, Pageable pageable) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalStateException("페이지가 존재하지 않습니다."));
         boardRepository.updateViewCount(boardId);
+
+        List<Comment> comments = commentRepository.findAllByBoard_BoardId(boardId, pageable);
+        List<CommentDetailsDto> commentDetailsDtos = new ArrayList<>();
+
+        for (Comment comment : comments) {
+            commentDetailsDtos.add(CommentDetailsDto.builder()
+                    .nickname(comment.getNickname())
+                    .content(comment.getContent())
+                    .hearts(comment.getHearts())
+                    .createDate(comment.getCreateDate())
+                    .build());
+        }
+
         return BoardDetailsDto.builder()
                 .nickname(board.getNickname())
                 .views(board.getViews() + 1)
                 .createDate(board.getCreateDate())
                 .title(board.getTitle())
                 .content(board.getContent())
+                .comments(commentDetailsDtos)
                 .build();
     }
 

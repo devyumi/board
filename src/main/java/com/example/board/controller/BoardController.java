@@ -56,9 +56,10 @@ public class BoardController {
     }
 
     @GetMapping("{boardId}")
-    public ResponseEntity<BoardDetailsDto> findPostDetails(@PathVariable(value = "boardId", required = false) Long boardId) {
+    public ResponseEntity<BoardDetailsDto> findPostDetails(@PathVariable(value = "boardId", required = false) Long boardId,
+                                                           @PageableDefault(size = 10, sort = "commentId", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok()
-                .body(boardService.findPostDetails(boardId));
+                .body(boardService.findPostDetails(boardId, pageable));
     }
 
     @PutMapping("{boardId}")

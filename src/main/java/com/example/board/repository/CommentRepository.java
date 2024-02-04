@@ -1,9 +1,12 @@
 package com.example.board.repository;
 
 import com.example.board.domain.Comment;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Modifying
@@ -15,4 +18,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Integer updateHeartCount(Long commentId);
 
     Long countByBoard_BoardId(Long boardId);
+
+    List<Comment> findAllByBoard_BoardId(Long boardId, Pageable pageable);
 }
