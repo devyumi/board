@@ -57,7 +57,7 @@ public class BoardController {
 
     @GetMapping("{boardId}")
     public ResponseEntity<BoardDetailsDto> findPostDetails(@PathVariable(value = "boardId", required = false) Long boardId,
-                                                           @PageableDefault(size = 10, sort = "commentId", direction = Sort.Direction.DESC) Pageable pageable) {
+                                                           @PageableDefault(size = 10, sort = "commentId", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok()
                 .body(boardService.findPostDetails(boardId, pageable));
     }
@@ -66,7 +66,7 @@ public class BoardController {
     public ResponseEntity<String> deletePost(@PathVariable(value = "boardId") Long boardId, @RequestBody Map<String, String> password) {
         boardService.deletePost(boardId, password.get("password"));
         return ResponseEntity.ok()
-                .body("삭제되었습니다.");
+                .body("boardId: " + boardId + " 이(가) 삭제되었습니다.");
     }
 
     @PutMapping("{boardId}/edit")
@@ -87,6 +87,6 @@ public class BoardController {
     public ResponseEntity<String> reportPost(@PathVariable(value = "boardId") Long boardId) {
         boardService.reportPost(boardId);
         return ResponseEntity.ok()
-                .body("게시글이 신고되었습니다.");
+                .body("boardId: " + boardId + " 이(가) 신고되었습니다.");
     }
 }

@@ -88,6 +88,12 @@ public class BoardService {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalStateException("페이지가 존재하지 않습니다."));
 
         if (passwordEncoder.matches(password.toString(), board.getPassword())) {
+            List<Comment> comments = commentRepository.findAllByBoard_BoardId(boardId);
+
+            for (Comment comment : comments) {
+                commentRepository.delete(comment);
+            }
+
             boardRepository.delete(board);
             DeletedPost deletedPost = DeletedPost.builder()
                     .boardId(board.getBoardId())
