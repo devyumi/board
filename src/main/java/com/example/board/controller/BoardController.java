@@ -34,7 +34,8 @@ public class BoardController {
             for (FieldError fieldError : fieldErrors) {
                 logger.error("{}: {}", fieldError.getField(), fieldError.getDefaultMessage());
             }
-            return ResponseEntity.badRequest().body(boardDto);
+            return ResponseEntity.badRequest()
+                    .body(BoardDto.builder().build());
         }
         boardService.savePost(boardDto);
         return ResponseEntity.ok()
@@ -76,7 +77,7 @@ public class BoardController {
             for (FieldError fieldError : fieldErrors) {
                 logger.error("{}: {}", fieldError.getField(), fieldError.getDefaultMessage());
             }
-            return ResponseEntity.badRequest().body(boardEditDto);
+            return ResponseEntity.badRequest().body(BoardEditDto.builder().build());
         }
         boardService.updatePost(boardId, boardEditDto);
         return ResponseEntity.ok()

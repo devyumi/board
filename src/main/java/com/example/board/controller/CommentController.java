@@ -30,7 +30,7 @@ public class CommentController {
             for (FieldError fieldError : fieldErrors) {
                 logger.error("{}: {}", fieldError.getField(), fieldError.getDefaultMessage());
             }
-            return ResponseEntity.badRequest().body(commentDto);
+            return ResponseEntity.badRequest().body(CommentDto.builder().build());
         }
         commentService.saveComment(boardId, commentDto);
         return ResponseEntity.ok()
@@ -47,10 +47,7 @@ public class CommentController {
                 logger.error("{}: {}", fieldError.getField(), fieldError.getDefaultMessage());
             }
             return ResponseEntity.badRequest()
-                    .body(CommentEditDto.builder()
-                            .password(null)
-                            .content(null)
-                            .build());
+                    .body(CommentEditDto.builder().build());
         }
         commentService.updateComment(boardId, commentId, commentEditDto);
         return ResponseEntity.ok()
@@ -63,7 +60,7 @@ public class CommentController {
                                                 @RequestBody Map<String, String> password) {
         commentService.deleteComment(boardId, commentId, password.get("password"));
         return ResponseEntity.ok()
-                .body("삭제되었습니다.");
+                .body("commentId: " + commentId + " 이(가) 삭제되었습니다.");
     }
 
     @PostMapping("{commentId}/heart")
