@@ -60,4 +60,15 @@ public class CommentService {
             throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
         }
     }
+
+    @Transactional
+    public void recommendComment(Long boardId, Long commentId) {
+        boardRepository.findById(boardId).orElseThrow(() -> new IllegalStateException("페이지가 존재하지 않습니다."));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalStateException("댓글이 존재하지 않습니다."));
+
+        if (comment.getBoard().getBoardId() != boardId) {
+            throw new IllegalStateException("잘못된 경로입니다.");
+        }
+        commentRepository.updateHeartCount(commentId);
+    }
 }

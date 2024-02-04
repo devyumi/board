@@ -60,9 +60,17 @@ public class CommentController {
     @PostMapping("{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable(value = "boardId") Long boardId,
                                                 @PathVariable(value = "commentId") Long commentId,
-                                                @RequestBody Map<String, String> password){
+                                                @RequestBody Map<String, String> password) {
         commentService.deleteComment(boardId, commentId, password.get("password"));
         return ResponseEntity.ok()
                 .body("삭제되었습니다.");
+    }
+
+    @PostMapping("{commentId}/heart")
+    public ResponseEntity<String> recommendComment(@PathVariable(value = "boardId") Long boardId,
+                                                   @PathVariable(value = "commentId") Long commentId) {
+        commentService.recommendComment(boardId, commentId);
+        return ResponseEntity.ok()
+                .body("commendId: " + commentId + " 을(를) 추천했습니다.");
     }
 }
