@@ -44,15 +44,14 @@ public class BoardService {
         List<BoardListsDto> boardListsDtos = new ArrayList<>();
 
         for (Board board : boards) {
-            BoardListsDto boardListsDto = BoardListsDto.builder()
+            boardListsDtos.add(BoardListsDto.builder()
                     .boardId(board.getBoardId())
                     .title(board.getTitle())
                     .commentCount(commentRepository.countByBoard_BoardId(board.getBoardId()))
                     .nickname(board.getNickname())
                     .views(board.getViews())
                     .createDate(board.getCreateDate())
-                    .build();
-            boardListsDtos.add(boardListsDto);
+                    .build());
         }
         return boardListsDtos;
     }
