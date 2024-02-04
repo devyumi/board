@@ -12,15 +12,17 @@ import java.time.LocalDateTime;
 public class BoardListsDto {
     private Long boardId;
     private String title;
+    private Long commentCount;
     private String nickname;
     private Integer views;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createDate;
 
     @Builder
-    public BoardListsDto(Long boardId, String title, String nickname, Integer views, LocalDateTime createDate) {
+    public BoardListsDto(Long boardId, String title, Long commentCount, String nickname, Integer views, LocalDateTime createDate) {
         this.boardId = boardId;
         this.title = title;
+        this.commentCount = commentCount;
         this.nickname = nickname;
         this.views = views;
         this.createDate = createDate;

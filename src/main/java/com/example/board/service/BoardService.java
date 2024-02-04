@@ -4,6 +4,7 @@ import com.example.board.domain.Board;
 import com.example.board.domain.DeletedPost;
 import com.example.board.dto.*;
 import com.example.board.repository.BoardRepository;
+import com.example.board.repository.CommentRepository;
 import com.example.board.repository.DeletedPostRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
     private final DeletedPostRepository deletedPostRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -44,6 +46,7 @@ public class BoardService {
             BoardListsDto boardListsDto = BoardListsDto.builder()
                     .boardId(board.getBoardId())
                     .title(board.getTitle())
+                    .commentCount(commentRepository.countByBoard_BoardId(board.getBoardId()))
                     .nickname(board.getNickname())
                     .views(board.getViews())
                     .createDate(board.getCreateDate())

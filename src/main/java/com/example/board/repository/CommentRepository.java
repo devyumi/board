@@ -13,4 +13,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Modifying
     @Query("update Comment c set c.hearts = c.hearts + 1 where c.commentId = :commentId")
     Integer updateHeartCount(Long commentId);
+
+    Long countByBoard_BoardId(Long boardId);
 }
