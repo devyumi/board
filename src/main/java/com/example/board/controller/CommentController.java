@@ -13,6 +13,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/board/{boardId}/comment")
@@ -54,5 +55,14 @@ public class CommentController {
         commentService.updateComment(boardId, commentId, commentEditDto);
         return ResponseEntity.ok()
                 .body(commentEditDto);
+    }
+
+    @PostMapping("{commentId}")
+    public ResponseEntity<String> deleteComment(@PathVariable(value = "boardId") Long boardId,
+                                                @PathVariable(value = "commentId") Long commentId,
+                                                @RequestBody Map<String, String> password){
+        commentService.deleteComment(boardId, commentId, password.get("password"));
+        return ResponseEntity.ok()
+                .body("삭제되었습니다.");
     }
 }
