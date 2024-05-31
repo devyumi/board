@@ -1,10 +1,8 @@
 package com.example.board.controller;
 
-import com.example.board.dto.BoardDetailsDto;
-import com.example.board.dto.BoardDto;
-import com.example.board.dto.BoardEditDto;
-import com.example.board.dto.BoardListsDto;
+import com.example.board.dto.*;
 import com.example.board.service.BoardService;
+import com.example.board.service.ImageService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -16,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -25,10 +25,12 @@ import java.util.Map;
 @AllArgsConstructor
 public class BoardController {
     private final BoardService boardService;
+    private final ImageService imageService;
     private final Logger logger = LoggerFactory.getLogger(BoardController.class);
 
     @PostMapping("write")
-    public ResponseEntity<BoardDto> writePost(@RequestBody @Valid BoardDto boardDto, BindingResult bindingResult) {
+    public ResponseEntity<BoardDto> writePost(@Valid @RequestPart(value = "board") BoardDto boardDto, BindingResult bindingResult,
+                                              @RequestPart(value = "image", required = false) List<MultipartFile> images) throws IOException {
         if (bindingResult.hasErrors()) {
             List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             for (FieldError fieldError : fieldErrors) {
@@ -37,7 +39,10 @@ public class BoardController {
             return ResponseEntity.badRequest()
                     .body(BoardDto.builder().build());
         }
-        boardService.savePost(boardDto);
+        Long boardId = boardService.savePost(boardDto);
+        if (!images.isEmpty()) {
+            imageService.saveImage(boardId, images);
+        }
         return ResponseEntity.ok()
                 .body(boardDto);
     }
