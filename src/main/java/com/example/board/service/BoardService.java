@@ -22,6 +22,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class BoardService {
+    private final ImageService imageService;
     private final BoardRepository boardRepository;
     private final ImageRepository imageRepository;
     private final CommentRepository commentRepository;
@@ -104,13 +105,17 @@ public class BoardService {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalStateException("페이지가 존재하지 않습니다."));
 
         if (passwordEncoder.matches(password.toString(), board.getPassword())) {
+            List<Image> images = imageRepository.findAllByBoard_BoardId(boardId);
             List<Comment> comments = commentRepository.findAllByBoard_BoardId(boardId);
 
-            for (Comment comment : comments) {
-                commentRepository.delete(comment);
+            for (Image image : images) {
+                imageService.deleteImage(image);
             }
 
+            imageRepository.deleteAll(images);
+            commentRepository.deleteAll(comments);
             boardRepository.delete(board);
+
             DeletedPost deletedPost = DeletedPost.builder()
                     .boardId(board.getBoardId())
                     .nickname(board.getNickname())
@@ -122,7 +127,6 @@ public class BoardService {
                     .createDate(board.getCreateDate())
                     .modifiedDate(board.getModifiedDate())
                     .build();
-
             return deletedPostRepository.save(deletedPost).getDeletedPostId();
         } else {
             throw new IllegalStateException("비밀번호가 일치하지 않습니다.");

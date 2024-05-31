@@ -56,8 +56,9 @@ public class ImageService {
 
     }
 
-    public void deleteImage() {
-
+    public void deleteImage(Image image) {
+        File deleteFile = new File(image.getImagePath());
+        deleteFile.delete();
     }
 
     private String createSaveFileName(String filename) {
