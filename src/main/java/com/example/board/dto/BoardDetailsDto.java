@@ -17,15 +17,17 @@ public class BoardDetailsDto {
     private LocalDateTime createDate;
     private String title;
     private String content;
+    private List<ImageDetailsDto> images;
     private List<CommentDetailsDto> comments;
 
     @Builder
-    public BoardDetailsDto(String nickname, Integer views, LocalDateTime createDate, String title, String content, List<CommentDetailsDto> comments) {
+    public BoardDetailsDto(String nickname, Integer views, LocalDateTime createDate, String title, String content, List<ImageDetailsDto> images, List<CommentDetailsDto> comments) {
         this.nickname = nickname;
         this.views = views;
         this.createDate = createDate;
         this.title = title;
         this.content = content;
+        this.images = images;
         this.comments = comments;
     }
 }

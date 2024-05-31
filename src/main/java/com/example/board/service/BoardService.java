@@ -3,10 +3,12 @@ package com.example.board.service;
 import com.example.board.domain.Board;
 import com.example.board.domain.Comment;
 import com.example.board.domain.DeletedPost;
+import com.example.board.domain.Image;
 import com.example.board.dto.*;
 import com.example.board.repository.BoardRepository;
 import com.example.board.repository.CommentRepository;
 import com.example.board.repository.DeletedPostRepository;
+import com.example.board.repository.ImageRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final ImageRepository imageRepository;
     private final CommentRepository commentRepository;
     private final DeletedPostRepository deletedPostRepository;
     private final PasswordEncoder passwordEncoder;
@@ -61,8 +64,20 @@ public class BoardService {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalStateException("페이지가 존재하지 않습니다."));
         boardRepository.updateViewCount(boardId);
 
+        List<Image> images = imageRepository.findAllByBoard_BoardId(boardId);
+        List<ImageDetailsDto> imageDetailsDtos = new ArrayList<>();
+
         List<Comment> comments = commentRepository.findAllByBoard_BoardId(boardId, pageable);
         List<CommentDetailsDto> commentDetailsDtos = new ArrayList<>();
+
+        for (Image image : images) {
+            imageDetailsDtos.add(ImageDetailsDto.builder()
+                    .originName(image.getOriginName())
+                    .saveName(image.getSaveName())
+                    .imagePath(image.getImagePath())
+                    .imageSize(image.getImageSize())
+                    .build());
+        }
 
         for (Comment comment : comments) {
             commentDetailsDtos.add(CommentDetailsDto.builder()
@@ -79,6 +94,7 @@ public class BoardService {
                 .createDate(board.getCreateDate())
                 .title(board.getTitle())
                 .content(board.getContent())
+                .images(imageDetailsDtos)
                 .comments(commentDetailsDtos)
                 .build();
     }
