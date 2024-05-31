@@ -35,8 +35,6 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
-	implementation 'commons-io:commons-io:2.7'
-
 	testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.12'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
