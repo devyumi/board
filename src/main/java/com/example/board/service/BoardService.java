@@ -111,7 +111,6 @@ public class BoardService {
             for (Image image : images) {
                 imageService.deleteImage(image);
             }
-
             imageRepository.deleteAll(images);
             commentRepository.deleteAll(comments);
             boardRepository.delete(board);
@@ -150,6 +149,14 @@ public class BoardService {
 
         boardRepository.updateReportCount(boardId);
         if (board.getReports() + 1 == 5) {
+            List<Image> images = imageRepository.findAllByBoard_BoardId(boardId);
+            List<Comment> comments = commentRepository.findAllByBoard_BoardId(boardId);
+
+            for (Image image : images) {
+                imageService.deleteImage(image);
+            }
+            imageRepository.deleteAll(images);
+            commentRepository.deleteAll(comments);
             boardRepository.delete(board);
 
             DeletedPost deletedPost = DeletedPost.builder()
@@ -159,11 +166,10 @@ public class BoardService {
                     .title(board.getTitle())
                     .content(board.getContent())
                     .views(board.getViews())
-                    .reports(board.getReports() + 1)
+                    .reports(board.getReports())
                     .createDate(board.getCreateDate())
                     .modifiedDate(board.getModifiedDate())
                     .build();
-
             deletedPostRepository.save(deletedPost).getDeletedPostId();
         }
     }
