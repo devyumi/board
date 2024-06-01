@@ -176,6 +176,7 @@ public class BoardService {
             BoardListsDto boardListsDto = BoardListsDto.builder()
                     .boardId(board.getBoardId())
                     .title(board.getTitle())
+                    .commentCount(commentRepository.countByBoard_BoardId(board.getBoardId()))
                     .nickname(board.getNickname())
                     .views(board.getViews())
                     .createDate(board.getCreateDate())

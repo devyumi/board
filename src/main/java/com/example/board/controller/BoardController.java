@@ -50,7 +50,7 @@ public class BoardController {
     @GetMapping()
     public ResponseEntity<List<BoardListsDto>> findLists(@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
                                                          @PageableDefault(size = 5, sort = "boardId", direction = Sort.Direction.DESC) Pageable pageable) {
-        if (keyword.length() == 0) {
+        if (keyword.isEmpty()) {
             return ResponseEntity.ok()
                     .body(boardService.findPost(pageable));
         } else if (keyword.length() == 1) {
