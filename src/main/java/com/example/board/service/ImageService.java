@@ -2,6 +2,7 @@ package com.example.board.service;
 
 import com.example.board.domain.Board;
 import com.example.board.domain.Image;
+import com.example.board.dto.ImageDetailsDto;
 import com.example.board.repository.BoardRepository;
 import com.example.board.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,32 +30,57 @@ public class ImageService {
     @Transactional
     public void saveImage(Long boardId, List<MultipartFile> images) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalStateException("페이지가 존재하지 않습니다."));
+        List<Image> imageList = imageRepository.findAllByBoard_BoardId(boardId);
+        List<String> originNameList = new ArrayList<>();
+
+        for (Image image : imageList) {
+            originNameList.add(image.getOriginName());
+        }
 
         for (MultipartFile file : images) {
-            String saveFileName = createSaveFileName(file.getOriginalFilename());
-            String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString();
-            String uploadPath = Paths.get(getUploadPath(now), saveFileName).toString();
-            File uploadFile = new File(uploadPath);
-
-            try {
-                file.transferTo(uploadFile);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            if (!(originNameList.contains(file.getOriginalFilename()))) {
+                ImageDetailsDto imageDetailsDto = uploadImage(file);
+                Image image = Image.builder()
+                        .originName(imageDetailsDto.getOriginName())
+                        .saveName(imageDetailsDto.getSaveName())
+                        .imagePath(imageDetailsDto.getImagePath())
+                        .imageSize(imageDetailsDto.getImageSize())
+                        .board(board)
+                        .build();
+                imageRepository.save(image);
             }
-
-            Image image = Image.builder()
-                    .originName(file.getOriginalFilename())
-                    .saveName(saveFileName)
-                    .imagePath(uploadPath)
-                    .imageSize(file.getSize())
-                    .board(board)
-                    .build();
-            imageRepository.save(image);
         }
     }
 
-    public void findImage() {
+    private ImageDetailsDto uploadImage(MultipartFile file) {
+        String saveFileName = createSaveFileName(file.getOriginalFilename());
+        String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String uploadPath = Paths.get(getUploadPath(now), saveFileName).toString();
+        File uploadFile = new File(uploadPath);
 
+        try {
+            file.transferTo(uploadFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return ImageDetailsDto.builder()
+                .originName(file.getOriginalFilename())
+                .saveName(saveFileName)
+                .imagePath(uploadPath)
+                .imageSize(file.getSize())
+                .build();
+    }
+
+    @Transactional
+    public void updateImage(Long boardId) {
+        List<Image> images = imageRepository.findAllByBoard_BoardId(boardId);
+
+        if (!images.isEmpty()) {
+            for (Image image : images) {
+                deleteImage(image);
+            }
+            imageRepository.deleteAll(images);
+        }
     }
 
     public void deleteImage(Image image) {

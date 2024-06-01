@@ -40,7 +40,7 @@ public class BoardController {
                     .body(BoardDto.builder().build());
         }
         Long boardId = boardService.savePost(boardDto);
-        if (!images.isEmpty()) {
+        if (!images.get(0).isEmpty()) {
             imageService.saveImage(boardId, images);
         }
         return ResponseEntity.ok()
@@ -76,7 +76,8 @@ public class BoardController {
     }
 
     @PutMapping("{boardId}/edit")
-    public ResponseEntity<BoardEditDto> editPost(@PathVariable(value = "boardId") Long boardId, @RequestBody @Valid BoardEditDto boardEditDto, BindingResult bindingResult) {
+    public ResponseEntity<BoardEditDto> editPost(@PathVariable(value = "boardId") Long boardId, @Valid @RequestPart(value = "board") BoardEditDto boardEditDto, BindingResult bindingResult,
+                                                 @RequestPart(value = "image", required = false) List<MultipartFile> images) throws IOException {
         if (bindingResult.hasErrors()) {
             List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             for (FieldError fieldError : fieldErrors) {
@@ -85,6 +86,12 @@ public class BoardController {
             return ResponseEntity.badRequest().body(BoardEditDto.builder().build());
         }
         boardService.updatePost(boardId, boardEditDto);
+
+        if (!images.get(0).isEmpty()) {
+            imageService.saveImage(boardId, images);
+        } else {
+            imageService.updateImage(boardId);
+        }
         return ResponseEntity.ok()
                 .body(boardEditDto);
     }
