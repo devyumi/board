@@ -4,10 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "comment")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
 @ToString
+@Builder
 public class Comment extends Time {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,17 +18,7 @@ public class Comment extends Time {
     private String content;
     private Integer hearts;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
-
-    @Builder
-    public Comment(Long commentId, String nickname, String password, String content, Integer hearts, Board board) {
-        this.commentId = commentId;
-        this.nickname = nickname;
-        this.password = password;
-        this.content = content;
-        this.hearts = hearts;
-        this.board = board;
-    }
 }
