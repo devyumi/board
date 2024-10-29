@@ -137,7 +137,15 @@ public class BoardService {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalStateException("페이지가 존재하지 않습니다."));
 
         if (passwordEncoder.matches(boardEditDto.getPassword().toString(), board.getPassword())) {
-            boardRepository.updateBoard(boardId, boardEditDto.getTitle(), boardEditDto.getContent());
+            boardRepository.save(Board.builder()
+                    .boardId(boardId)
+                    .nickname(board.getNickname())
+                    .password(board.getPassword())
+                    .title(boardEditDto.getTitle())
+                    .content(boardEditDto.getContent())
+                    .views(board.getViews())
+                    .reports(board.getReports())
+                    .build());
         } else {
             throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
         }
