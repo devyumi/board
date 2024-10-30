@@ -11,9 +11,6 @@ import java.util.List;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
-    @Modifying
-    @Query("update Board b set b.views = b.views + 1 where b.boardId = :boardId")
-    Integer updateViewCount(Long boardId);
 
     @Modifying
     @Query("update Board b set b.reports = b.reports + 1 where b.boardId = :boardId")

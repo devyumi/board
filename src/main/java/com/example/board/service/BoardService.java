@@ -63,7 +63,15 @@ public class BoardService {
     @Transactional
     public BoardDetailsDto findPostDetails(Long boardId, Pageable pageable) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalStateException("페이지가 존재하지 않습니다."));
-        boardRepository.updateViewCount(boardId);
+        boardRepository.save(Board.builder()
+                .boardId(boardId)
+                .nickname(board.getNickname())
+                .password(board.getPassword())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .views(board.getViews() + 1)
+                .reports(board.getReports())
+                .build());
 
         List<Image> images = imageRepository.findAllByBoard_BoardId(boardId);
         List<ImageDetailsDto> imageDetailsDtos = new ArrayList<>();
@@ -155,7 +163,16 @@ public class BoardService {
     public void reportPost(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalStateException("페이지가 존재하지 않습니다."));
 
-        boardRepository.updateReportCount(boardId);
+        boardRepository.save(Board.builder()
+                .boardId(boardId)
+                .nickname(board.getNickname())
+                .password(board.getPassword())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .views(board.getViews())
+                .reports(board.getReports() + 1)
+                .build());
+
         if (board.getReports() + 1 == 5) {
             List<Image> images = imageRepository.findAllByBoard_BoardId(boardId);
             List<Comment> comments = commentRepository.findAllByBoard_BoardId(boardId);
