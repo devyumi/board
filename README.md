@@ -1,80 +1,60 @@
-<div style="text-align: center">
-<span style="font-size: 15px">
+# 🌟 게시판 REST API 프로젝트
+<p>게시글과 댓글을 작성할 수 있는 <strong>REST API 게시판 서비스</strong>입니다.</p>
+<p>로그인 기능이 없는 대신 게시글(댓글) 등록시 비밀번호를 입력합니다.</p>
+
+[<img src="https://img.shields.io/badge/velog 바로가기-20C997?style=for-the-badge&logo=velog&logoColor=white"/>](https://velog.io/@devyumi/개인-게시판-댓글-API)
 
 <br>
 
-## `Board Service`
-
-게시판 **REST API**
-
-<br>
-
----
-
-<br>
-
-## `프로젝트 소개`
-
-글과 댓글을 작성할 수 있는 게시판
-
-로그인 기능이 없는 대신 **게시글(댓글) 등록 시 사용했던 비밀번호를 이용**하여 게시글 수정 및 삭제를 할 수 있다.
-
-<br>
-
----
-
-<br>
-
-## `개발 기간`
-
-v1: 2024.01.29. ~ 2024.02.04.
-
-v2: 2024.06.01. (이미지 처리)
+## 🎨 주요 기능
+<table>
+  <tr>
+      <td rowspan="2" align=center>게시글</td>
+      <td align=center>CRUD</td>
+      <td>R: 조회수, 검색(제목, 내용), 이미지 처리 기능 포함</td>
+  </tr>
+  <tr>
+    <td align=center>신고</td>
+    <td>게시글이 5번 이상 신고될 경우, 댓글과 파일이 모두 삭제되고 다른 테이블로 이관됨</td>
+  </tr>
+  <tr>
+      <td rowspan="2" align=center>댓글</td>
+      <td align=center>CRUD</td>
+      <td align=center>-</td>
+  </tr>
+  <tr>
+      <td align=center>추천</td>
+      <td align=center>-</td>
+  </tr>
+</table>
 
 <br>
 
----
+## 📁 API
+<p>작성한 API는 아래에서 확인할 수 있습니다.</p>
+
+➡️ [API 바로보기](https://github.com/devyumi/board/blob/main/APIs.md)
 
 <br>
 
-## `사용 기술`
-
-<br>
-
-<img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
+## ⚙ 기술 스택
+### ✔️ Back
+<div>
+<img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white"/>
+<img src="https://img.shields.io/badge/JPA-6DB33F?style=for-the-badge&logo=JPA&logoColor=white"/>
 <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
-<img src="https://img.shields.io/badge/jpa-3EADF1?style=for-the-badge&logo=&logoColor=white">
-
-<br>
-<br>
-
----
-
-<br>
-
-## `주요 기능`
-<br>
-
-**`게시글`**
-
-CRUD | 검색 | 신고 | 조회수 | 이미지 처리
-
-<br>
-
-**`댓글`**
-
-CURD | 추천
-
-<br>
-
----
-</span>
 </div>
 
-<div style="text-align: right">
+<br>
 
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fdevyumi%2Fboard&count_bg=%231295E5&title_bg=%23000000&icon=trustpilot.svg&icon_color=%23FFFF00&title=devyumi&edge_flat=true)](https://hits.seeyoufarm.com)
-<a href="https://velog.io/@devyumi/%EA%B0%9C%EC%9D%B8-%EA%B2%8C%EC%8B%9C%ED%8C%90-%EB%8C%93%EA%B8%80-API">
-  <img src="src/main/resources/static/img.png" width="20" height="20"/>
-</a>
-</div>
+## ❗ 개선할 점
+- 게시판 조회수 증가 시 중복을 방지하기 위해 Cookie를 사용할 것
+- 댓글 정렬 조건을 '추천순', '최신순'으로 분리할 것
+
+<br>
+
+## 🛠️ Version
+|버전|날짜|업데이트|
+|:--:|:--:|:--:|
+|v1.0|2024.01.29. ~ 2024.02.04.|CRUD 외 위에서 정의한 기능 구현|
+|v2.0|2024.06.01.|이미지 처리 기능 추가|
